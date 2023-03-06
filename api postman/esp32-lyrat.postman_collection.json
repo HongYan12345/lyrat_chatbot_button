@@ -1,0 +1,176 @@
+{
+	"info": {
+		"_postman_id": "52cf42a9-b349-4f47-8daa-419ecc89cafb",
+		"name": "esp32-lyrat",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18909901"
+	},
+	"item": [
+		{
+			"name": "getToken",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"studentupm2022@gmail.com\", \"password\":\"student\"}"
+				},
+				"url": {
+					"raw": "https://thingsboard.cloud:443/api/auth/login",
+					"protocol": "https",
+					"host": [
+						"thingsboard",
+						"cloud"
+					],
+					"port": "443",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "ivan.cmaya@alumnos.upm.es",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "SBC21g09",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTemperatura",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHVkZW50dXBtMjAyMkBnbWFpbC5jb20iLCJ1c2VySWQiOiI4NDg1OTU2MC00NzU2LTExZWQtOTQ1YS1lOWViYTIyYjlkZjYiLCJzY29wZXMiOlsiVEVOQU5UX0FETUlOIl0sInNlc3Npb25JZCI6ImRlNmEwMjhlLTdjNDItNGM3NC05YmU1LWE0ZWEzNDIxMTJhNSIsImlzcyI6InRoaW5nc2JvYXJkLmNsb3VkIiwiaWF0IjoxNjc4MTE2MDYyLCJleHAiOjE2NzgxNDQ4NjIsImZpcnN0TmFtZSI6IlN0dWRlbnQiLCJsYXN0TmFtZSI6IlVQTSIsImVuYWJsZWQiOnRydWUsImlzUHVibGljIjpmYWxzZSwiaXNCaWxsaW5nU2VydmljZSI6ZmFsc2UsInByaXZhY3lQb2xpY3lBY2NlcHRlZCI6dHJ1ZSwidGVybXNPZlVzZUFjY2VwdGVkIjp0cnVlLCJ0ZW5hbnRJZCI6ImUyZGQ2NTAwLTY3OGEtMTFlYi05MjJjLWY3NDAyMTlhYmNiOCIsImN1c3RvbWVySWQiOiIxMzgxNDAwMC0xZGQyLTExYjItODA4MC04MDgwODA4MDgwODAifQ.yrcNOdPOoxveuLlyHuminvR1WgjSOys8PZbSGeiW--rYibRfH3fv2c4t9yVprMlu7DACXipE6j0EBIopDieOkA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/cf87adf0-dc76-11ec-b1ed-e5d3f0ce866e/values/timeseries?keys=temperature&startTs=1675975121187&endTs=1676061521189&interval=10000000&agg=AVG&useStrictDataTypes=true",
+					"protocol": "https",
+					"host": [
+						"thingsboard",
+						"cloud"
+					],
+					"port": "443",
+					"path": [
+						"api",
+						"plugins",
+						"telemetry",
+						"DEVICE",
+						"cf87adf0-dc76-11ec-b1ed-e5d3f0ce866e",
+						"values",
+						"timeseries"
+					],
+					"query": [
+						{
+							"key": "keys",
+							"value": "temperature"
+						},
+						{
+							"key": "startTs",
+							"value": "1675975121187"
+						},
+						{
+							"key": "endTs",
+							"value": "1676061521189"
+						},
+						{
+							"key": "interval",
+							"value": "10000000"
+						},
+						{
+							"key": "agg",
+							"value": "AVG"
+						},
+						{
+							"key": "useStrictDataTypes",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "textToSpeech",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"audioConfig\": { \r\n        \"audioEncoding\" : \"MP3\", \r\n        \"sampleRateHertz\": 24000 },\r\n    \"voice\": { \"languageCode\" : \"es-ES\"}\r\n        ,\r\n    \"input\": { \"text\" : \"good morning\" }\r\n}"
+				},
+				"url": {
+					"raw": "https://texttospeech.googleapis.com/v1beta1/text:synthesize?key=AIzaSyDFpYI8FuINw7wFmgsAYw_iVQKN3LTV9jU",
+					"protocol": "https",
+					"host": [
+						"texttospeech",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"v1beta1",
+						"text:synthesize"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "ivan.cmaya@alumnos.upm.es",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "SBC21g09",
+							"disabled": true
+						},
+						{
+							"key": "key",
+							"value": "AIzaSyDFpYI8FuINw7wFmgsAYw_iVQKN3LTV9jU"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
