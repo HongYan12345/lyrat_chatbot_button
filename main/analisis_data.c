@@ -415,6 +415,116 @@ char *send_text(int typeData, int time, int range){
     return text_return;
 }
 
+char *send_text_num(int typeData, int time, int range){
+    
+    http_get_token();
+    
+    long long time_ms = 1;
+    static char *text_return = "";
+    static char test_text[20];
+    ESP_LOGI(TAG, "send text...");
+    if(typeData == 1){
+       
+    }
+    else if(typeData == 2){
+       
+    }
+    else if(typeData == 3){
+        
+    }
+    else if(typeData == 4){
+        
+    }
+    else{
+        text_return = send_error(0);
+        return text_return;
+    }
+    if(range == 4){
+        //max
+       
+    }
+    else if(range == 1){
+        //max
+        
+    }
+    else if(range == 2){
+            //min
+        
+    }
+    else if(range == 3 || range == 0){
+            //medio
+        
+    }
+    else{
+        text_return = send_error(typeData);
+        ESP_LOGI(TAG, "range: %d", range);
+        return text_return;
+    }
+
+    if(range == 4){
+        
+    }
+    else if(time == 1){
+        //hoy
+        
+        time_ms = 86400001;
+    }
+    else if(time == 2){
+        //ayer
+        
+        time_ms = 86400000*2+1;
+    }
+    else if(time == 3){
+        //semana
+        
+        time_ms = 86400000*7+1;
+    }
+    else if(time == 4){
+        //mes
+        
+        time_ms = (long long)86400000*30+1;
+    }
+    else if(time == 5){
+        //año
+        
+        time_ms = (long long)86400000*365+1;
+    }
+    else{
+        text_return = send_error(typeData);
+        return text_return;
+    }
+    if(typeData == 1){
+        http_get_time("temperature");
+        http_get_data("temperature", time_ms,time == 2, range);
+        ESP_LOGI(TAG, "temperatura: %s", revolve_api);
+    }
+    else if(typeData == 2){
+        http_get_time("humidity");
+        http_get_data("humidity", time_ms,time == 2, range);
+        ESP_LOGI(TAG, "humedad: %s", revolve_api);
+    }
+    else if(typeData == 3){
+        http_get_time("co2");
+        http_get_data("co2", time_ms,time == 2, range);
+        ESP_LOGI(TAG, "co2: %s", revolve_api);
+    }
+    else if(typeData == 4){
+        http_get_time("light");
+        http_get_data("light", time_ms,time == 2, range);
+        ESP_LOGI(TAG, "luminosidad: %s", revolve_api);
+    }
+    else{
+        text_return = send_error(0);
+        return text_return;
+    }
+
+    
+    ESP_LOGI(TAG, "text_return: %s ", revolve_api);
+    text_return = revolve_api;
+    
+    return text_return;
+}
+
 char *send_error(int typeData){
     static char *text_error = "no entiendo, llamame otra vez";
     if(typeData == 1){

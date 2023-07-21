@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/a3761/Desktop/esp-idf/esp-adf-master/examples/cloud_services/lyrat_chatbot_button
+# Install script for directory: C:/Espressif/frameworks/esp-idf-v4.4.4/esp-adf/examples/cloud_services/lyrat_chatbot_button
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,12 +34,12 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Users/a3761/.espressif/tools/xtensa-esp32-elf/esp-2021r2-patch2-8.4.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-objdump.exe")
+  set(CMAKE_OBJDUMP "C:/Espressif/tools/xtensa-esp32-elf/esp-2021r2-patch5-8.4.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-objdump.exe")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/a3761/Desktop/esp-idf/esp-adf-master/examples/cloud_services/lyrat_chatbot_button/build/esp-idf/cmake_install.cmake")
+  include("C:/Espressif/frameworks/esp-idf-v4.4.4/esp-adf/examples/cloud_services/lyrat_chatbot_button/build/esp-idf/cmake_install.cmake")
 
 endif()
 
@@ -51,5 +51,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/a3761/Desktop/esp-idf/esp-adf-master/examples/cloud_services/lyrat_chatbot_button/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Espressif/frameworks/esp-idf-v4.4.4/esp-adf/examples/cloud_services/lyrat_chatbot_button/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

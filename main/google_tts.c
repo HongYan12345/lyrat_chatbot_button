@@ -72,11 +72,13 @@ static esp_err_t _http_stream_reader_event_handle(http_stream_event_msg_t *msg)
     esp_http_client_handle_t http = (esp_http_client_handle_t)msg->http_client;
     google_tts_t *tts = (google_tts_t *)msg->user_data;
 
+    static char *buffer = NULL;
+    static int buffer_len = 0;
     int read_len = 0;
 
     if (msg->event_id == HTTP_STREAM_PRE_REQUEST) {
         // Post text data
-        ESP_LOGI(TAG, "[ + ] HTTP client HTTP_STREAM_PRE_REQUEST, lenght=%d", msg->buffer_len);
+        ESP_LOGI(TAG, "[ + ] HTTP client HTTP_STREAM_PRE_REQUEST, length=%d", msg->buffer_len);
         tts->tts_total_read = 0;
         tts->is_begin = true;
         int payload_len = snprintf(tts->buffer, tts->buffer_size, GOOGLE_TTS_TEMPLATE, tts->sample_rate, tts->lang_code, tts->text);
@@ -84,64 +86,70 @@ static esp_err_t _http_stream_reader_event_handle(http_stream_event_msg_t *msg)
         esp_http_client_set_method(http, HTTP_METHOD_POST);
         esp_http_client_set_header(http, "Content-Type", "application/json");
         tts->remain_len = 0;
+        buffer = realloc(buffer, tts->buffer_size);
+        buffer_len = 0;
         return ESP_OK;
     }
 
     if (msg->event_id == HTTP_STREAM_ON_RESPONSE) {
-        ESP_LOGD(TAG, "[ + ] HTTP client HTTP_STREAM_ON_RESPONSE, lenght=%d", msg->buffer_len);
-        /* Read first chunk */
-        int process_data_len = 0;
-        char *data_ptr = tts->buffer;
-        int align_read = msg->buffer_len * 4 / 3;
-        align_read -= (align_read % 4);
-        align_read -= tts->remain_len;
-        read_len = esp_http_client_read(http, tts->remain_len + tts->buffer, align_read);
-
-        // ESP_LOGI(TAG, "Need read = %d, read_len=%d, tts->remain_len=%d", align_read, read_len, tts->remain_len);
+        ESP_LOGD(TAG, "[ + ] HTTP client HTTP_STREAM_ON_RESPONSE, length=%d", msg->buffer_len);
+        char *data_ptr = msg->buffer;
+        read_len = esp_http_client_read(http, msg->buffer, msg->buffer_len);
         if (read_len <= 0) {
             return read_len;
         }
-        process_data_len = read_len + tts->remain_len;
 
         if (tts->is_begin) {
             tts->is_begin = false;
 
-            while (*data_ptr != ':' && process_data_len) {
-                process_data_len--;
+            
+            while (*data_ptr != ':' && read_len) {
+                read_len--;
                 data_ptr++;
             }
-            while (*data_ptr != '"' && process_data_len) {
-                process_data_len--;
+            while (*data_ptr != '"' && read_len) {
+                read_len--;
                 data_ptr++;
             }
-            // *data_ptr = 0;
             data_ptr++;
-            process_data_len--;
+            read_len--;
 
+            buffer = realloc(buffer, buffer_len + read_len);
+            memcpy(buffer + buffer_len, data_ptr, read_len);
+            buffer_len += read_len;
+        } else {
+            buffer = realloc(buffer, buffer_len + read_len);
+            memcpy(buffer + buffer_len, msg->buffer, read_len);
+            buffer_len += read_len;
         }
+
         unsigned int mp3_len = 0;
         int keep_next_time = 0;
-        if (process_data_len > 0) {
-            data_ptr[process_data_len] = 0;
-            keep_next_time = process_data_len % 4;
-            process_data_len -= keep_next_time;
+        if (read_len > 0) {
+            data_ptr[read_len] = 0;
+            keep_next_time = read_len % 4;
+            read_len -= keep_next_time;
             tts->remain_len = keep_next_time;
-            mbedtls_base64_decode(msg->buffer, msg->buffer_len, &mp3_len, (unsigned char *)data_ptr, process_data_len);
-            memcpy(tts->buffer, data_ptr + process_data_len, keep_next_time);
+            mbedtls_base64_decode(msg->buffer, msg->buffer_len, &mp3_len, (unsigned char *)data_ptr, buffer_len);
+            memcpy(tts->buffer, data_ptr + read_len, keep_next_time);
         }
-        if (mp3_len == 0) {
-            return ESP_FAIL;
+        if (mp3_len > 0) {
+            // Process the decoded audio data here
+            // You can choose to save it to a file, play it, or do any further processing
+            // based on your application requirements
+            ESP_LOGI(TAG, "Decoded audio length: %u", mp3_len);
         }
+        free(buffer);
+        buffer = NULL;
         return mp3_len;
     }
 
     if (msg->event_id == HTTP_STREAM_POST_REQUEST) {
         ESP_LOGI(TAG, "[ + ] HTTP client HTTP_STREAM_POST_REQUEST, write end chunked marker");
-
     }
 
     if (msg->event_id == HTTP_STREAM_FINISH_REQUEST) {
-
+        
     }
 
     return ESP_OK;

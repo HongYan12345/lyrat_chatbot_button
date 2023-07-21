@@ -14,6 +14,7 @@ extern "C" {
 //void http_get_token();
 char *send_problema(const char *text, int *pos);
 char *send_text(int tem_or_hum, int time, int range);
+char *send_text_num(int tem_or_hum, int time, int range);
 char *send_text2(int tem_or_hum, int time, int range);
 char *send_error();
 #ifdef __cplusplus

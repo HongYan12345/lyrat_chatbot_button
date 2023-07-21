@@ -89,6 +89,7 @@ $<TARGET_FILE:__idf_audio_stream>
 $<TARGET_FILE:__idf_battery_service>
 $<TARGET_FILE:__idf_bluetooth_service>
 $<TARGET_FILE:__idf_coredump_upload_service>
+$<TARGET_FILE:__idf_esp_codec_dev>
 $<TARGET_FILE:__idf_esp_event_cast>
 $<TARGET_FILE:__idf_input_key_service>
 $<TARGET_FILE:__idf_ota_service>

@@ -102,9 +102,10 @@ ESP_LOGI(TAG, "[ 1 ] button id=%d", get_input_rec_id());
     esp_periph_start(set, button_handle);
     esp_periph_start(set, wifi_handle);
     esp_periph_start(set, led_handle);
-
+periph_led_blink(led_handle, GPIO_NUM_22, 500, 500, true, -1, 0);
+ESP_LOGI(TAG, "[ *********** ] start led");
     periph_wifi_wait_for_connected(wifi_handle, portMAX_DELAY);
-
+periph_led_blink(led_handle, GPIO_NUM_22, 500, 0, true, -1, 0);
     ESP_LOGI(TAG, "[ 2 ] Start codec chip");
     audio_board_handle_t board_handle = audio_board_init();
     audio_hal_ctrl_codec(board_handle->audio_hal, AUDIO_HAL_CODEC_MODE_BOTH, AUDIO_HAL_CTRL_START);
@@ -115,6 +116,7 @@ ESP_LOGI(TAG, "[ 1 ] button id=%d", get_input_rec_id());
         .record_sample_rates = EXAMPLE_RECORD_PLAYBACK_SAMPLE_RATE,
         .encoding = ENCODING_LINEAR16,
         .on_begin = google_sr_begin,
+        .buffer_size = 7000,
     };
     google_sr_handle_t sr = google_sr_init(&sr_config);
 
@@ -137,6 +139,7 @@ ESP_LOGI(TAG, "[ 1 ] button id=%d", get_input_rec_id());
 
 
     ESP_LOGI(TAG, "[ 5 ] Listen for all pipeline events");
+    
     while (1) {
         audio_event_iface_msg_t msg;
         int typeData = 0;
@@ -177,8 +180,8 @@ ESP_LOGI(TAG, "[ 1 ] button id=%d", get_input_rec_id());
         } else if (msg.cmd == PERIPH_BUTTON_RELEASE || msg.cmd == PERIPH_BUTTON_LONG_RELEASE) {
             ESP_LOGI(TAG, "[ * ] Stop pipeline");
 
-            periph_led_stop(led_handle, get_green_led_gpio());
-
+            //periph_led_stop(led_handle, get_green_led_gpio());
+            
             char *original_text = google_sr_stop(sr);
            
         if (original_text == NULL) {
@@ -206,10 +209,10 @@ ESP_LOGI(TAG, "[ 1 ] button id=%d", get_input_rec_id());
             if(strstr(original_text, "ahora")){
                 range = 4;
             }
-            else if(strstr(original_text, "máxima")){
+            else if(strstr(original_text, "máxima") || strstr(original_text, "máximo")){
                 range = 1;
             }
-            else if(strstr(original_text, "mínima")){
+            else if(strstr(original_text, "mínima") || strstr(original_text, "mínimo")){
                 range = 2;
             }
             else if(strstr(original_text, "media")){
@@ -240,9 +243,13 @@ ESP_LOGI(TAG, "[ 1 ] button id=%d", get_input_rec_id());
         
             
             ESP_LOGI(TAG, "text = %s", text);
+            uint32_t free_heap = esp_get_free_heap_size();
+    ESP_LOGI(TAG,"Free heap: %u bytes\n", free_heap);
             google_tts_start(tts, text, GOOGLE_TTS_LANG);
             text = "no entiendo, llama me otra vez";
-        }}
+        }
+        periph_led_blink(led_handle, GPIO_NUM_22, 500, 0, true, -1, 0);
+        }
 
     }
     ESP_LOGI(TAG, "[ 6 ] Stop audio_pipeline");

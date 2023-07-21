@@ -1,4 +1,4 @@
-source "C:/Users/a3761/Desktop/esp-idf/components/bootloader/Kconfig.projbuild"
-source "C:/Users/a3761/Desktop/esp-idf/components/esp_rom/Kconfig.projbuild"
-source "C:/Users/a3761/Desktop/esp-idf/components/esptool_py/Kconfig.projbuild"
-source "C:/Users/a3761/Desktop/esp-idf/components/partition_table/Kconfig.projbuild"
+source "C:/Espressif/frameworks/esp-idf-v4.4.4/components/bootloader/Kconfig.projbuild"
+source "C:/Espressif/frameworks/esp-idf-v4.4.4/components/esp_rom/Kconfig.projbuild"
+source "C:/Espressif/frameworks/esp-idf-v4.4.4/components/esptool_py/Kconfig.projbuild"
+source "C:/Espressif/frameworks/esp-idf-v4.4.4/components/partition_table/Kconfig.projbuild"
